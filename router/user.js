@@ -83,11 +83,13 @@
  */
 
 const express = require("express");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 
 // Path: backend/router/user.js
-router.get("/", (req, res) => {
+router.get("/", auth, (req, res) => {
+  console.log(req.user);
   res.send("Hello World!");
 });
 
