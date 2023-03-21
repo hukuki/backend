@@ -1,15 +1,19 @@
-require('db.js');
+require('./db.js');
 
 // Path: backend/model/user.js
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-    username: {
+    _id: {
+        type: String,
+    },
+    email:{
         type: String,
         required: true,
-        unique: true,
-        trim: true,
-        minlength: 3
+    },
+    organization: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Organization',
     },
 });
 
