@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-const uri = process.env.ATLAS_URI;
+const uri = process.env.MONGO_DB_URI;
+
 mongoose.connect(uri);
 const connection = mongoose.connection;
 
