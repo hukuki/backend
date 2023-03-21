@@ -84,13 +84,21 @@
 
 const express = require("express");
 const auth = require("../middleware/auth");
+const User = require("../model/user");
 
 const router = express.Router();
 
 // Path: backend/router/user.js
-router.get("/", auth, (req, res) => {
-  console.log(req.user);
-  res.send("Hello World!");
+router.get("/", auth, async (req, res) => {
+	const organization = req.user.organization;
+
+	const users = await User.find({ organization: organization });
+
+	res.send(users);
 });
+
+
+
+
 
 module.exports = router;
