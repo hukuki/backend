@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
     },
+    is_admin: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const User = mongoose.model("User", userSchema);
