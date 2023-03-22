@@ -9,6 +9,8 @@ const port = process.env.PORT || 3000;
 
 const userRouter = require("./router/user");
 const queryRouter = require("./router/query");
+const noteRouter = require("./router/note");
+const spaceRouter = require("./router/space");
 
 const options = {
   definition: {
@@ -44,6 +46,8 @@ app.use(express.json());
 
 app.use("/users", userRouter);
 app.use("/query", queryRouter);
+app.use("/notes", noteRouter);
+app.use("/spaces", spaceRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
