@@ -11,9 +11,9 @@ const userRouter = require("./router/user");
 const queryRouter = require("./router/query");
 
 app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerFile)
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerFile)
 );
 
 app.use(cors());
@@ -23,5 +23,5 @@ app.use("/user", userRouter);
 app.use("/query", queryRouter);
 
 app.listen(port, () => {
-  console.log(`Server is running on port: ${port}`);
+    console.log(`Server is running on port: ${port}`);
 });
