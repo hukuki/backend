@@ -2,8 +2,12 @@ const swaggerAutogen = require('swagger-autogen')();
 
 const doc = {
   info: {
-    title: 'My API',
-    description: 'Description',
+    title: 'Legal Research API',
+    description: 'This is the backend of the Legal Reseach application and documented with Swagger',
+    contact: {
+      name: "Onur Eren Arpaci",
+      email: "onurerenarpaci@hotmail.com",
+    },
   },
   host: 'localhost:3000',
   schemes: ['http'],

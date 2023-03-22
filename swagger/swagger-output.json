@@ -1,8 +1,12 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "My API",
-    "description": "Description",
+    "title": "Legal Research API",
+    "description": "This is the backend of the Legal Reseach application and documented with Swagger",
+    "contact": {
+      "name": "Onur Eren Arpaci",
+      "email": "onurerenarpaci@hotmail.com"
+    },
     "version": "1.0.0"
   },
   "host": "localhost:3000",
