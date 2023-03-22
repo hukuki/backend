@@ -4,9 +4,6 @@ require('./db.js');
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-    _id: {
-        type: String,
-    },
     email:{
         type: String,
         required: true,
@@ -19,6 +16,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    auth_provider_id: {
+        type: String,
+        required: true,
+    }
 });
 
 const User = mongoose.model("User", userSchema);
