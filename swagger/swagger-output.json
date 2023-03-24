@@ -1,0 +1,44 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Legal Research API",
+    "description": "This is the backend of the Legal Reseach application and documented with Swagger",
+    "contact": {
+      "name": "Onur Eren Arpaci",
+      "email": "onurerenarpaci@hotmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/user/": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/query/": {
+      "post": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  }
+}
