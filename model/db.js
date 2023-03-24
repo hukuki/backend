@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const uri = process.env.MONGO_DB_URI || "mongodb://mongo:27017/main";
+
 mongoose.connect(uri);
 const connection = mongoose.connection;
 
