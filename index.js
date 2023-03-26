@@ -12,9 +12,9 @@ const userRouter = require("./router/user");
 const queryRouter = require("./router/query");
 
 app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerFile)
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerFile)
 );
 
 app.use(cors());
