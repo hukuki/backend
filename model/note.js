@@ -2,6 +2,12 @@ require('./db.js');
 
 const mongoose = require("mongoose");
 
+/*
+    Every note has a document, a user, and a space.
+    If the space is null, then the note is a global note for that user.
+    If the space is not null, then the note belongs to that space.
+*/
+
 const noteSchema = new mongoose.Schema({
     document: {
         type: mongoose.Schema.Types.ObjectId,
@@ -14,7 +20,7 @@ const noteSchema = new mongoose.Schema({
     },
     to: {
         type: Number,
-        required: true
+        required: false
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
