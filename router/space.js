@@ -56,4 +56,27 @@ router.get("/:spaceId/notes", auth, async (req, res) => {
     res.send(notes);
 });
 
+router.post("/:spaceId/bookmarks/:bookmarkId", auth, verifyId, async (req, res) => {
+    if (req.user._id.equals(req.params.spaceId)) {
+        await Bookmark.updateOne({ _id: req.params.bookmarkId, user: req.user._id }, { space: null });
+    } else {
+        const space = await Space.findOne({ _id: req.params.spaceId, user: req.user._id });
+
+        if (!space) return res.status(404).send({ message: "Space not found." });
+
+        await Bookmark.updateOne({ _id: req.params.bookmarkId, user: req.user._id }, { space: space._id });
+    }
+
+    res.send();
+});
+
+router.get("/:spaceId/bookmarks", auth, async (req, res) => {
+    const space = await Space.findOne({ _id: req.params.spaceId, user: req.user._id });
+
+    const bookmarks = await Bookmark.find({ user: req.user._id, space: space._id });
+    
+    res.send(bookmarks);
+});
+
+
 module.exports = router;

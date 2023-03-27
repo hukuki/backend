@@ -11,6 +11,7 @@ const userRouter = require("./router/user");
 const queryRouter = require("./router/query");
 const noteRouter = require("./router/note");
 const spaceRouter = require("./router/space");
+const bookmarkRouter = require("./router/bookmark");
 
 const options = {
   definition: {
@@ -48,6 +49,7 @@ app.use("/users", userRouter);
 app.use("/query", queryRouter);
 app.use("/notes", noteRouter);
 app.use("/spaces", spaceRouter);
+app.use("/bookmarks", bookmarkRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
