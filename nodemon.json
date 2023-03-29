@@ -1,0 +1,4 @@
+{   
+    "ignore": ["swagger/*.json"],
+    "exec" :  "npm run swagger-autogen && npm start"
+}
