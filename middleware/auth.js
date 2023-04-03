@@ -9,7 +9,13 @@ admin.initializeApp({
 });
 
 module.exports = async (req, res, next) => {
+    /* #swagger.autoHeaders=false */
+    
+    /*  #swagger.security = [{
+            "bearerAuth": []
+    }] */
     const bearer = req.headers.authorization;
+    console.log(req.headers);
 
     if (!bearer || !bearer.startsWith('Bearer '))
         return res.status(401).send({ message: 'Unauthorized' });
@@ -20,21 +26,19 @@ module.exports = async (req, res, next) => {
     try {
         userInfo = await admin.auth().verifyIdToken(accessToken);
     } catch (e) {
-        return res.status(401).send({ message: 'Unauthorized' });
+        return res.status(401).send({ message: 'Unauthorized hello' });
     }
 
     // We do not pass the user object retrieved from the third party auth provider.
     // We create a new user object (in our database) with the uid and email from the third party auth provider,
     // then pass it to the next functions.
 
-    if (userInfo.registered) {
-        req.user = await User.findById(userInfo.uid);
+    req.user = await User.findOne({
+        auth_provider_id : userInfo.uid
+    });
 
-        if (req.user) return next();
-
-        console.log("Database sync error: ", userInfo);
-    }
-
+    if (req.user) return next();
+    
     // If not registered (meaning the user is signed up from the third party auth provider
     // but not yet encoutered in the backend) : create a new user in our database.
 
@@ -50,14 +54,7 @@ module.exports = async (req, res, next) => {
             domain: domain,
         });
     
-    req.user = await User.create({ _id: userInfo.uid, email: userInfo.email, organization: organization._id });
-
-    // Set the custom claims on the newly created user
-    // to indicate that the user has been registered to our own database.
-
-    await getAuth().setCustomUserClaims(userInfo.uid, {
-        registered: true,
-    });
-
+    req.user = await User.create({ email: userInfo.email, organization: organization._id, auth_provider_id: userInfo.uid });
+    
     next();
 }
