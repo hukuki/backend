@@ -2,6 +2,7 @@ const express = require("express");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 const User = require("../model/user");
+const verifyId = require("../middleware/verifyId");
 
 const router = express.Router();
 
@@ -14,18 +15,18 @@ router.get("/", auth, async (req, res) => {
 	res.send(users);
 });
 
-router.get("/:id", auth, async (req, res) => {
+router.get("/:id", auth, verifyId, async (req, res) => {
 	const userId = req.params.id;
 	const organization = req.user.organization;
 	
-	const user = await User.find({ _id: userId, organization });
+	const user = await User.findOne({ _id: userId, organization });
 
 	if (!user) return res.status(404).send({message:"User not found."});
-
+ 
 	res.send(user);
 });
 
-router.delete("/:id", [auth, admin], async (req, res) => {
+router.delete("/:id", [auth, admin], verifyId, async (req, res) => {
 	const userId = req.params.id;
 	const organization = req.user.organization;
 
