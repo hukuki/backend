@@ -1,8 +1,9 @@
 const admin = require('firebase-admin');
 const { getAuth } = require('firebase-admin/auth');
-const serviceAccount = require("../cred/hukuki-dc783-firebase-adminsdk-46yr9-7624ff4406.json");
 const User = require('../model/user');
 const Organization = require('../model/organization');
+
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
