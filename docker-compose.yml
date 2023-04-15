@@ -1,24 +1,26 @@
 version: "3"
 services:
         mongo:
-            command: mongod --quiet --logpath /dev/null
             container_name: mongo
+            command: mongod --quiet --logpath /dev/null
+            restart: always
             image: mongo
             volumes:
               - ./data:/data/db
             ports:
-              - '27018:27017'
+              - '27017:27017'
 
         hukuki-backend:
             container_name: hukuki
-            image: hukuki/main
-            command: nodemon server.js localhost 8080
+            build:
+              context: .
+            # command: nodemon server.js localhost 8080
             restart: always
-            build: .
             ports:
               - 8080:8080
             links:
               - mongo
             volumes:
-              - .:/hukuki-backend/
+              - ./:/home/app
+              - /home/app/node_modules
         

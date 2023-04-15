@@ -11,6 +11,9 @@ const port = process.env.PORT || 8080;
 
 const userRouter = require("./router/user");
 const queryRouter = require("./router/query");
+const noteRouter = require("./router/note");
+const spaceRouter = require("./router/space");
+const bookmarkRouter = require("./router/bookmark");
 
 app.use(
     "/api-docs",
@@ -23,6 +26,9 @@ app.use(express.json());
 
 app.use("/users", userRouter);
 app.use("/query", queryRouter);
+app.use("/notes", noteRouter);
+app.use("/spaces", spaceRouter);
+app.use("/bookmarks", bookmarkRouter);
 
 app.listen(port, () => {
   console.log(`${chalk.green.bold.inverse(" SUCCESS ")} Server is running on port: ${chalk.bold(port)}.`);

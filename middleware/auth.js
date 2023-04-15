@@ -9,7 +9,13 @@ admin.initializeApp({
 });
 
 module.exports = async (req, res, next) => {
+    /* #swagger.autoHeaders=false */
+    
+    /*  #swagger.security = [{
+            "bearerAuth": []
+    }] */
     const bearer = req.headers.authorization;
+    console.log(req.headers);
 
     if (!bearer || !bearer.startsWith('Bearer '))
         return res.status(401).send({ message: 'Unauthorized' });
@@ -20,7 +26,7 @@ module.exports = async (req, res, next) => {
     try {
         userInfo = await admin.auth().verifyIdToken(accessToken);
     } catch (e) {
-        return res.status(401).send({ message: 'Unauthorized' });
+        return res.status(401).send({ message: 'Unauthorized hello' });
     }
 
     // We do not pass the user object retrieved from the third party auth provider.
