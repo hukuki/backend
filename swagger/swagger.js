@@ -1,4 +1,5 @@
 const swaggerAutogen = require("swagger-autogen")({ openapi: "3.0.0" });
+requrie('dotenv').config();
 
 const doc = {
     info: {
@@ -10,7 +11,7 @@ const doc = {
         email: "onurerenarpaci@hotmail.com",
         },
     },
-    host: "localhost:8080",
+    host: (process.env.PUBLIC_IP || "localhost") + ":8080",
     schemes: ["http"],
     components: {
         "@schemas": {
