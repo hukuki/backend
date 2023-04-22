@@ -26,7 +26,10 @@ jobs:
         mkdir cred
         echo $FIREBASE_CRED | base64 --decode > cred/cred.json
     - run: npm ci
-    - run: npm run swagger-autogen
+    - name: Swagger Config
+      env:
+        PUBLIC_IP: "18.198.134.13"
+      run: npm run swagger-autogen
     - name: Start the Server 
       env:
         MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
