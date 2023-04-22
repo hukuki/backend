@@ -27,7 +27,6 @@ jobs:
         echo $FIREBASE_CRED | base64 --decode > cred/cred.json
     - run: npm ci
     - run: npm run swagger-autogen
-    - run: npm install pm2 -g
     - name: Start the Server 
       env:
         MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
