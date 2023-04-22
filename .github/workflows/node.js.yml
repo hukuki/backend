@@ -31,4 +31,6 @@ jobs:
       env:
         ATLAS_URI: ${{ secrets.ATLAS_URI }}
         HAYSTACK_URL: "htpp://dummy-url:8000"
-      run: npm start
+      run: |
+        echo $ATLAS_URI
+        npm start
