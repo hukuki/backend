@@ -31,4 +31,4 @@ jobs:
       env:
         MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
         HAYSTACK_URL: "htpp://dummy-url:8000"
-      run: pm2 restart NodeApp
+      run: pm2 restart NodeApp --update-env
