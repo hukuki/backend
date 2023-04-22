@@ -23,6 +23,7 @@ jobs:
       env:
         FIREBASE_CRED: ${{ secrets.FIREBASE_CRED }}
       run: |
+        mkdir cred
         echo $FIREBASE_CRED | base64 --decode > cred/cred.json
     - run: npm ci
     - run: npm run swagger-autogen
