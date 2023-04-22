@@ -29,8 +29,6 @@ jobs:
     - run: npm run swagger-autogen
     - name: Start the Server 
       env:
-        ATLAS_URI: ${{ secrets.ATLAS_URI }}
+        MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
         HAYSTACK_URL: "htpp://dummy-url:8000"
-      run: |
-        echo $ATLAS_URI
-        npm start
+      run: npm start
