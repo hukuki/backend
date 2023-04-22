@@ -27,8 +27,9 @@ jobs:
         echo $FIREBASE_CRED | base64 --decode > cred/cred.json
     - run: npm ci
     - run: npm run swagger-autogen
+    - run: npm install pm2 -g
     - name: Start the Server 
       env:
         MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
         HAYSTACK_URL: "htpp://dummy-url:8000"
-      run: npm start
+      run: pm2 restrat NodeApp
