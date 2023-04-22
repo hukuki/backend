@@ -1,5 +1,5 @@
 const swaggerAutogen = require("swagger-autogen")({ openapi: "3.0.0" });
-requrie('dotenv').config();
+require('dotenv').config();
 
 const doc = {
     info: {
