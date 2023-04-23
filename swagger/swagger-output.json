@@ -590,6 +590,7 @@
     },
     "/documents/{id}": {
       "get": {
+        "summary": "Get the content of a specific document.",
         "description": "",
         "parameters": [
           {

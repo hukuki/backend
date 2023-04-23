@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/:id', (req, res) => {
+    // #swagger.summary = Get the content of a specific document.
     res.send([
         {
             "type": "header",
