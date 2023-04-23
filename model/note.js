@@ -10,9 +10,7 @@ const mongoose = require("mongoose");
 
 const noteSchema = new mongoose.Schema({
     document: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Document',
-        required: true
+        type: String,
     },
     from: {
         type: Number,

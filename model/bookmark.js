@@ -4,8 +4,7 @@ const mongoose = require("mongoose");
 
 const bookmarkSchema = new mongoose.Schema({
     document: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Document',
+        type: String,
         required: true
     },
     space: {

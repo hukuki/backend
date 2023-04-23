@@ -17,6 +17,7 @@
   "paths": {
     "/users/": {
       "get": {
+        "summary": "Get all the collegues of the user.",
         "description": "",
         "parameters": [],
         "responses": {
@@ -36,6 +37,7 @@
     },
     "/users/{id}": {
       "get": {
+        "summary": "Get a certain collegue of the user.",
         "description": "",
         "parameters": [
           {
@@ -68,6 +70,7 @@
         ]
       },
       "delete": {
+        "summary": "Delete a certain collegue account. Needs domain-admin access.",
         "description": "",
         "parameters": [
           {
@@ -105,6 +108,7 @@
     },
     "/query/": {
       "post": {
+        "summary": "Search for a document.",
         "description": "",
         "parameters": [],
         "responses": {
@@ -131,7 +135,8 @@
     },
     "/notes/": {
       "get": {
-        "description": "",
+        "summary": "Gets all notes of the user.",
+        "description": "Notes are objects that contain a `from`and `to` values that determine what part of the document is higlighted. It can be used to represent a highlighted text without any note taken, but also a highlight with a note.",
         "parameters": [],
         "responses": {
           "200": {
@@ -148,7 +153,8 @@
         ]
       },
       "post": {
-        "description": "",
+        "summary": "Creates a new note.",
+        "description": "Notes are objects that contain a `from`and `to` values that determine what part of the document is higlighted. It can be used to represent a highlighted text without any note taken, but also a highlight with a note.  <br>  <ul>  <li>You need to provide a document id in `document` field, which this `Note` is taken on.</li>  <li>Also, `from` and `to` fields, which indicates start and end of the highlighted text.</li>  <li>`content` is the actual note that user had written. It can be empty, since user may prefer to just highlight the text.</li>   </ul>",
         "parameters": [],
         "responses": {
           "200": {
@@ -193,7 +199,8 @@
     },
     "/notes/{id}": {
       "patch": {
-        "description": "",
+        "summary": "Updates a note.",
+        "description": "⚠️ Note that this endpoint is not for changing the space which this note is in. Use `POST /spaces/:spaceId/notes/:noteId` endpoint for this. ",
         "parameters": [
           {
             "name": "id",
@@ -245,6 +252,7 @@
         }
       },
       "delete": {
+        "summary": "Deletes a note.",
         "description": "",
         "parameters": [
           {
@@ -279,7 +287,8 @@
     },
     "/spaces/": {
       "get": {
-        "description": "",
+        "summary": "Get all the spaces created by the user.",
+        "description": "Spaces are models that represent a project/folder, in which `Note`s and `Bookmark`s within are related to a certain case or project. This feature is useful since user can group different stuff.",
         "parameters": [],
         "responses": {
           "200": {
@@ -296,6 +305,7 @@
         ]
       },
       "post": {
+        "summary": "Create a new space.",
         "description": "",
         "parameters": [],
         "responses": {
@@ -332,6 +342,7 @@
     },
     "/spaces/{spaceId}": {
       "delete": {
+        "summary": "Delete a space.",
         "description": "",
         "parameters": [
           {
@@ -366,6 +377,7 @@
     },
     "/spaces/{spaceId}/notes/{noteId}": {
       "post": {
+        "summary": "Move a note to a space.",
         "description": "",
         "parameters": [
           {
@@ -408,6 +420,7 @@
     },
     "/spaces/{spaceId}/notes": {
       "get": {
+        "summary": "Get all the notes in a space.",
         "description": "",
         "parameters": [
           {
@@ -436,6 +449,7 @@
     },
     "/spaces/{spaceId}/bookmarks/{bookmarkId}": {
       "post": {
+        "summary": "Move a bookmark to a space.",
         "description": "",
         "parameters": [
           {
@@ -478,6 +492,7 @@
     },
     "/spaces/{spaceId}/bookmarks": {
       "get": {
+        "summary": "Get all the bookmarks in a space.",
         "description": "",
         "parameters": [
           {
@@ -506,7 +521,8 @@
     },
     "/bookmarks/": {
       "get": {
-        "description": "",
+        "summary": "Gets all bookmarks of the user.",
+        "description": "Bookmarks are objects which will allow users to bookmark ceration documents, so that they can keep track of their work. Multiple bookmarks for a single document may be created, because each of these bookmarks may belong to different `Space`s.",
         "parameters": [],
         "responses": {
           "200": {
@@ -523,7 +539,8 @@
         ]
       },
       "post": {
-        "description": "",
+        "summary": "Creates a new bookmark.",
+        "description": "Bookmarks are objects which will allow users to bookmark ceration documents, so that they can keep track of their work. Multiple bookmarks for a single document may be created, because each of these bookmarks may belong to different `Space`s.   </br>  </br>  ⚠️ Beware that bookmarks when first created are created into the `Global Space`, which is the default space where every `Bookmark`and `Note`is located if user doesn",
         "parameters": [],
         "responses": {
           "200": {
@@ -559,7 +576,8 @@
     },
     "/bookmarks/{id}": {
       "delete": {
-        "description": "",
+        "summary": "Deletes a bookmark.",
+        "description": "⚠️ Beware that this endpoint is not for changing the space which this `Bookmark` is in. Use `POST /spaces/:spaceId/bookmarks/:bookmarkId` endpoint for this. ",
         "parameters": [
           {
             "name": "id",

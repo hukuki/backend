@@ -8,6 +8,8 @@ const router = express.Router();
 
 // Path: backend/router/user.js
 router.get("/", auth, async (req, res) => {
+	// #swagger.summary = Get all the collegues of the user.
+
 	const organization = req.user.organization;
 
 	const users = await User.find({ organization: organization });
@@ -16,6 +18,8 @@ router.get("/", auth, async (req, res) => {
 });
 
 router.get("/:id", auth, verifyId, async (req, res) => {
+	// #swagger.summary = Get a certain collegue of the user.
+
 	const userId = req.params.id;
 	const organization = req.user.organization;
 	
@@ -27,6 +31,8 @@ router.get("/:id", auth, verifyId, async (req, res) => {
 });
 
 router.delete("/:id", [auth, admin], verifyId, async (req, res) => {
+	// #swagger.summary = Delete a certain collegue account. Needs domain-admin access.
+
 	const userId = req.params.id;
 	const organization = req.user.organization;
 

@@ -15,7 +15,10 @@ router.post('/', async (req, res) => {
                     schema: { $ref: '#/components/schemas/QueryRequest' }
                 }
             }
-    } */
+    } 
+    #swagger.summary = 'Search for a document.'
+    */
+    
     try {
         console.log(req.body);
         const response = await axios.post(`${haystack_url}/query`, req.body);
