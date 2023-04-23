@@ -1,6 +1,7 @@
 const express = require("express");
 const Space = require("../model/space.js");
 const Note = require("../model/note.js");
+const Bookmark = require("../model/bookmark.js");
 const auth = require("../middleware/auth.js");
 const verifyId = require("../middleware/verifyId.js");
 
@@ -42,6 +43,13 @@ router.delete("/:spaceId", auth, verifyId, async (req, res) => {
 
 router.post("/:spaceId/notes/:noteId", auth, verifyId, async (req, res) => {
     // #swagger.summary = 'Move a note to a space.'
+
+    /* #swagger.description = 'When a `Note` is first created, it is located in user\'s `Global Space`. After user creates `Space`s, they can move their notes to these different spaces.
+    
+    </br>
+    </br>
+    ⚠️ To move a `Note` back to the user\'s `Global Space`, you need to provide the user\'s id instead of space id, in the `spaceId` field.' 
+    */
     
     if (req.user._id.equals(req.params.spaceId)) {
         await Note.updateOne({ _id: req.params.noteId, user: req.user._id }, { space: null });
@@ -69,6 +77,13 @@ router.get("/:spaceId/notes", auth, async (req, res) => {
 router.post("/:spaceId/bookmarks/:bookmarkId", auth, verifyId, async (req, res) => {
     // #swagger.summary = 'Move a bookmark to a space.'
     
+      /* #swagger.description = '
+    When a `Bookmark` is first created, it is located in user\'s `Global Space`. After user creates `Space`s, they can move their bookmarks to these different spaces.
+    </br>
+    </br>
+    ⚠️ To move a `Bookmark` back to the user\'s `Global Space`, you need to provide the user\'s id instead of space id, in the `spaceId` field.' 
+    */
+
     if (req.user._id.equals(req.params.spaceId)) {
         await Bookmark.updateOne({ _id: req.params.bookmarkId, user: req.user._id }, { space: null });
     } else {

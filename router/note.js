@@ -24,7 +24,20 @@ router.post("/", auth, async (req, res) => {
     <li>You need to provide a document id in `document` field, which this `Note` is taken on.</li>
     <li>Also, `from` and `to` fields, which indicates start and end of the highlighted text.</li>
     <li>`content` is the actual note that user had written. It can be empty, since user may prefer to just highlight the text.</li>    
-    </ul>'
+    </ul>
+    ⚠️ Beware that notes when first created are created into the `Global Space`, which is the default space where every `Bookmark`and `Note`is located if user doesn't decide to change it.
+    You can use `POST /spaces/:spaceId/notes/:noteId` endpoint to relocate this `Note` into another space.
+    '
+    */
+   /*  #swagger.requestBody = {
+            in: 'body',
+            required: true,
+            content: {
+                'application/json': {
+                    schema: { $ref: '#/components/schemas/PostNoteRequest' }
+                }
+            }
+    } 
     */
 
     const documentId = req.body.document;
@@ -50,6 +63,16 @@ router.patch("/:id", auth, verifyId, async (req, res) => {
     // #swagger.summary = 'Updates a note.'
     // #swagger.description = '⚠️ Note that this endpoint is not for changing the space which this note is in. Use `POST /spaces/:spaceId/notes/:noteId` endpoint for this. '
 
+    /*  #swagger.requestBody = {
+            in: 'body',
+            required: true,
+            content: {
+                'application/json': {
+                    schema: { $ref: '#/components/schemas/PatchNoteRequest' }
+                }
+            }
+    } 
+    */
     const note = await Note.findOneAndUpdate({
         _id: req.params.id,
         user: req.user._id

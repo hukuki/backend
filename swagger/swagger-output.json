@@ -154,7 +154,7 @@
       },
       "post": {
         "summary": "Creates a new note.",
-        "description": "Notes are objects that contain a `from`and `to` values that determine what part of the document is higlighted. It can be used to represent a highlighted text without any note taken, but also a highlight with a note.  <br>  <ul>  <li>You need to provide a document id in `document` field, which this `Note` is taken on.</li>  <li>Also, `from` and `to` fields, which indicates start and end of the highlighted text.</li>  <li>`content` is the actual note that user had written. It can be empty, since user may prefer to just highlight the text.</li>   </ul>",
+        "description": "Notes are objects that contain a `from`and `to` values that determine what part of the document is higlighted. It can be used to represent a highlighted text without any note taken, but also a highlight with a note.  <br>  <ul>  <li>You need to provide a document id in `document` field, which this `Note` is taken on.</li>  <li>Also, `from` and `to` fields, which indicates start and end of the highlighted text.</li>  <li>`content` is the actual note that user had written. It can be empty, since user may prefer to just highlight the text.</li>   </ul>  ⚠️ Beware that notes when first created are created into the `Global Space`, which is the default space where every `Bookmark`and `Note`is located if user doesn",
         "parameters": [],
         "responses": {
           "200": {
@@ -173,24 +173,12 @@
           }
         ],
         "requestBody": {
+          "in": "body",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "document": {
-                    "example": "any"
-                  },
-                  "content": {
-                    "example": "any"
-                  },
-                  "from": {
-                    "example": "any"
-                  },
-                  "to": {
-                    "example": "any"
-                  }
-                }
+                "$ref": "#/components/schemas/PostNoteRequest"
               }
             }
           }
@@ -231,21 +219,12 @@
           }
         ],
         "requestBody": {
+          "in": "body",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "content": {
-                    "example": "any"
-                  },
-                  "from": {
-                    "example": "any"
-                  },
-                  "to": {
-                    "example": "any"
-                  }
-                }
+                "$ref": "#/components/schemas/PatchNoteRequest"
               }
             }
           }
@@ -378,7 +357,7 @@
     "/spaces/{spaceId}/notes/{noteId}": {
       "post": {
         "summary": "Move a note to a space.",
-        "description": "",
+        "description": "When a `Note` is first created, it is located in user\\'s `Global Space`. After user creates `Space`s, they can move their notes to these different spaces.    </br>  </br>  ⚠️ To move a `Note` back to the user\\'s `Global Space`, you need to provide the user\\'s id instead of space id, in the `spaceId` field.",
         "parameters": [
           {
             "name": "spaceId",
@@ -450,7 +429,7 @@
     "/spaces/{spaceId}/bookmarks/{bookmarkId}": {
       "post": {
         "summary": "Move a bookmark to a space.",
-        "description": "",
+        "description": "  When a `Bookmark` is first created, it is located in user\\'s `Global Space`. After user creates `Space`s, they can move their bookmarks to these different spaces.  </br>  </br>  ⚠️ To move a `Bookmark` back to the user\\'s `Global Space`, you need to provide the user\\'s id instead of space id, in the `spaceId` field.",
         "parameters": [
           {
             "name": "spaceId",
@@ -634,6 +613,57 @@
           }
         },
         "additionalProperties": false
+      },
+      "PostNoteRequest": {
+        "title": "PostNoteRequest",
+        "required": [
+          "from",
+          "to",
+          "content"
+        ],
+        "type": "object",
+        "properties": {
+          "document": {
+            "title": "Document Id",
+            "type": "string",
+            "default": "documentId"
+          },
+          "from": {
+            "title": "From",
+            "type": "number"
+          },
+          "to": {
+            "title": "To",
+            "type": "number"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          }
+        }
+      },
+      "PatchNoteRequest": {
+        "title": "PatchNoteRequest",
+        "required": [
+          "from",
+          "to",
+          "content"
+        ],
+        "type": "object",
+        "properties": {
+          "from": {
+            "title": "From",
+            "type": "number"
+          },
+          "to": {
+            "title": "To",
+            "type": "number"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          }
+        }
       }
     },
     "securitySchemes": {

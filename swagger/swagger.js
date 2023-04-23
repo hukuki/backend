@@ -36,6 +36,49 @@ const doc = {
             },
             additionalProperties: false,
         },
+        PostNoteRequest: {
+            title: "PostNoteRequest",
+            required: ["from", "to", "content"],
+            type: "object",
+            properties: {
+            document: {
+                title: "Document Id",
+                type: "string",
+                default: "documentId"
+            },
+            from: {
+                title: "From",
+                type: "number",
+            },
+            to: {
+                title: "To",
+                type: "number",
+            },
+            content: {
+                title: "Content",
+                type: "string",
+            },
+            },
+        },
+        PatchNoteRequest: {
+            title: "PatchNoteRequest",
+            required: ["from", "to", "content"],
+            type: "object",
+            properties: {
+            from: {
+                title: "From",
+                type: "number",
+            },
+            to: {
+                title: "To",
+                type: "number",
+            },
+            content: {
+                title: "Content",
+                type: "string",
+            },
+            },
+        },
         },
     },
     securityDefinitions: {
