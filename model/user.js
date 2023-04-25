@@ -34,6 +34,14 @@ const userSchema = new mongoose.Schema({
     }
 });
 
+userSchema.methods.toJSON = function() {
+    var obj = this.toObject(); //or var obj = this;
+    delete obj.isAdmin;
+    delete obj.isSuper;
+    delete obj.auth_provider_id;
+    return obj;
+}
+
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;
