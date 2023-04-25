@@ -11,7 +11,12 @@ const spaceSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
-    }
+    },
+    people: [{
+        type: mongoose.Schema.Types.ObjectId,
+        require: true,
+        ref: "User"
+    }]
 });
 
 const Space = mongoose.model("Space", spaceSchema);
