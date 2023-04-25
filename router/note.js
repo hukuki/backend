@@ -94,7 +94,7 @@ router.delete("/:id", auth, verifyId, async (req, res) => {
     
     if (!note) return res.status(404).send({ message: 'Note not found.' });
 
-    res.send();
+    res.send(note);
 });
 
 module.exports = router;
