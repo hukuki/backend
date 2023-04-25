@@ -44,7 +44,7 @@ router.post("/", auth, async (req, res) => {
     const space = await Space.create({
         user: req.user._id,
         name: req.body.name
-    }).populate('user');
+    });
 
     res.send(space);
 });
