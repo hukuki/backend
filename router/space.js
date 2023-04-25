@@ -152,7 +152,7 @@ router.post("/:spaceId/users/:userId", auth, verifyId, async (req, res) => {
 });
 
 router.delete("/:spaceId/users/:userId", auth, verifyId, async (req, res) => {
-    // #swagger.summary = 'Add a collegue to a space.'
+    // #swagger.summary = 'Delete a collegue from the space.'
 
     const user = await User.findOne({ _id: req.params.userId, organization: req.user.organization });
 
