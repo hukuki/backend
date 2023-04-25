@@ -38,7 +38,7 @@ router.delete("/:spaceId", auth, verifyId, async (req, res) => {
 
     await Note.updateMany({ user: req.user._id, space: space._id }, { space: null });
 
-    res.send();
+    res.send(space);
 });
 
 router.post("/:spaceId/notes/:noteId", auth, verifyId, async (req, res) => {
