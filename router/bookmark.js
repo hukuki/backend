@@ -51,7 +51,7 @@ router.delete("/:id", auth, verifyId, async (req, res) => {
     
     if (!bookmark) return res.status(404).send({ message: 'Bookmark not found.' });
 
-    res.send();
+    res.send(bookmark);
 });
 
 module.exports = router;
