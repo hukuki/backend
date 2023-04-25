@@ -515,7 +515,7 @@
         ]
       },
       "delete": {
-        "summary": "Add a collegue to a space.",
+        "summary": "Delete a collegue from the space.",
         "description": "",
         "parameters": [
           {
