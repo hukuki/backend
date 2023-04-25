@@ -266,7 +266,7 @@
     },
     "/spaces/": {
       "get": {
-        "summary": "Get all the spaces created by the user.",
+        "summary": "Get all the spaces which the user created or added to.",
         "description": "Spaces are models that represent a project/folder, in which `Note`s and `Bookmark`s within are related to a certain case or project. This feature is useful since user can group different stuff.",
         "parameters": [],
         "responses": {
@@ -417,6 +417,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           }
         },
         "security": [
@@ -429,7 +432,7 @@
     "/spaces/{spaceId}/bookmarks/{bookmarkId}": {
       "post": {
         "summary": "Move a bookmark to a space.",
-        "description": "  When a `Bookmark` is first created, it is located in user\\'s `Global Space`. After user creates `Space`s, they can move their bookmarks to these different spaces.  </br>  </br>  ⚠️ To move a `Bookmark` back to the user\\'s `Global Space`, you need to provide the user\\'s id instead of space id, in the `spaceId` field.",
+        "description": " When a `Bookmark` is first created, it is located in user\\'s `Global Space`. After user creates `Space`s, they can move their bookmarks to these different spaces.  </br>  </br>  ⚠️ To move a `Bookmark` back to the user\\'s `Global Space`, you need to provide the user\\'s id instead of space id, in the `spaceId` field.",
         "parameters": [
           {
             "name": "spaceId",
@@ -441,6 +444,90 @@
           },
           {
             "name": "bookmarkId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/spaces/{spaceId}/users/{userId}": {
+      "post": {
+        "summary": "Add a collegue to a space.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "spaceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Add a collegue to a space.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "spaceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
             "in": "path",
             "required": true,
             "schema": {
@@ -489,6 +576,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           }
         },
         "security": [
