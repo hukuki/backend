@@ -27,7 +27,7 @@ app.use(express.json());
 
 app.use("/users", userRouter);
 app.use("/query", queryRouter);
-app.use("/notes", noteRouter);
+//app.use("/notes", noteRouter);
 app.use("/spaces", spaceRouter);
 app.use("/bookmarks", bookmarkRouter);
 app.use("/documents", documentRouter);
