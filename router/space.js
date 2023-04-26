@@ -6,26 +6,9 @@ const User = require("../model/user.js");
 const auth = require("../middleware/auth.js");
 const verifyId = require("../middleware/verifyId.js");
 
+const { findOneSpace, findSpaces } = require("./util/space.js");
+
 const router = express.Router();
-
-const findOneSpace = async ({ space, user }) => {
-    /* Get the space which user has created, or has been added to. */
-
-    return await Space.findOne({ _id: space })
-        .or([{ user: user }, { "people": user }]);
-}
-
-const findSpaces = async ({ user }) => {
-    /*  Gets all the spaces that user have access to, i.e. 
-        all spaces created by the user, or spaces that the user is added to. 
-    */
-
-    return await Space.find()
-        .or([{ user: user }, { "people": user }])
-        .populate('people')
-        .populate('user');
-}
-
 
 router.get("/", auth, async (req, res) => {
     // #swagger.summary = 'Get all the spaces which the user created or added to.'
@@ -63,29 +46,7 @@ router.delete("/:spaceId", auth, verifyId, async (req, res) => {
     res.send(space);
 });
 
-router.post("/:spaceId/notes/:noteId", auth, verifyId, async (req, res) => {
-    // #swagger.summary = 'Move a note to a space.'
-
-    /* #swagger.description = 'When a `Note` is first created, it is located in user\'s `Global Space`. After user creates `Space`s, they can move their notes to these different spaces.
-    
-    </br>
-    </br>
-    ⚠️ To move a `Note` back to the user\'s `Global Space`, you need to provide the user\'s id instead of space id, in the `spaceId` field.' 
-    */
-
-    if (req.user._id.equals(req.params.spaceId)) {
-        await Note.updateOne({ _id: req.params.noteId, user: req.user._id }, { space: null });
-    } else {
-        const space = await findOneSpace({ space: req.params.spaceId, user: req.user._id });
-
-        if (!space) return res.status(404).send({ message: "Space not found." });
-
-        await Note.updateOne({ _id: req.params.noteId, user: req.user._id }, { space: space._id });
-    }
-
-    res.send();
-});
-
+/*
 router.get("/:spaceId/notes", auth, async (req, res) => {
     // #swagger.summary = 'Get all the notes in a space.'
 
@@ -100,29 +61,7 @@ router.get("/:spaceId/notes", auth, async (req, res) => {
 
     res.send(notes);
 });
-
-router.post("/:spaceId/bookmarks/:bookmarkId", auth, verifyId, async (req, res) => {
-    // #swagger.summary = 'Move a bookmark to a space.'
-
-    /* #swagger.description = 
-    '   When a `Bookmark` is first created, it is located in user\'s `Global Space`. After user creates `Space`s, they can move their bookmarks to these different spaces.
-        </br>
-        </br>
-        ⚠️ To move a `Bookmark` back to the user\'s `Global Space`, you need to provide the user\'s id instead of space id, in the `spaceId` field.' 
-    */
-
-    if (req.user._id.equals(req.params.spaceId)) {
-        await Bookmark.updateOne({ _id: req.params.bookmarkId, user: req.user._id }, { space: null });
-    } else {
-        const space = await findOneSpace({ space: req.params.spaceId, user: req.user._id });
-
-        if (!space) return res.status(404).send({ message: "Space not found." });
-
-        await Bookmark.updateOne({ _id: req.params.bookmarkId, user: req.user._id }, { space: space._id });
-    }
-
-    res.send();
-});
+*/
 
 router.post("/:spaceId/users/:userId", auth, verifyId, async (req, res) => {
     // #swagger.summary = 'Add a collegue to a space.'

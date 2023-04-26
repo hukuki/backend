@@ -10,7 +10,7 @@ const bookmarkSchema = new mongoose.Schema({
     space: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Space',
-        required: false
+        required: false,
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,

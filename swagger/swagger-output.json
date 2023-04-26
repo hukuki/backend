@@ -133,137 +133,6 @@
         }
       }
     },
-    "/notes/": {
-      "get": {
-        "summary": "Gets all notes of the user.",
-        "description": "Notes are objects that contain a `from`and `to` values that determine what part of the document is higlighted. It can be used to represent a highlighted text without any note taken, but also a highlight with a note.",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      },
-      "post": {
-        "summary": "Creates a new note.",
-        "description": "Notes are objects that contain a `from`and `to` values that determine what part of the document is higlighted. It can be used to represent a highlighted text without any note taken, but also a highlight with a note.  <br>  <ul>  <li>You need to provide a document id in `document` field, which this `Note` is taken on.</li>  <li>Also, `from` and `to` fields, which indicates start and end of the highlighted text.</li>  <li>`content` is the actual note that user had written. It can be empty, since user may prefer to just highlight the text.</li>   </ul>  ⚠️ Beware that notes when first created are created into the `Global Space`, which is the default space where every `Bookmark`and `Note`is located if user doesn",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "in": "body",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostNoteRequest"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/notes/{id}": {
-      "patch": {
-        "summary": "Updates a note.",
-        "description": "⚠️ Note that this endpoint is not for changing the space which this note is in. Use `POST /spaces/:spaceId/notes/:noteId` endpoint for this. ",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "in": "body",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PatchNoteRequest"
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Deletes a note.",
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
     "/spaces/": {
       "get": {
         "summary": "Get all the spaces which the user created or added to.",
@@ -354,49 +223,6 @@
         ]
       }
     },
-    "/spaces/{spaceId}/notes/{noteId}": {
-      "post": {
-        "summary": "Move a note to a space.",
-        "description": "When a `Note` is first created, it is located in user\\'s `Global Space`. After user creates `Space`s, they can move their notes to these different spaces.    </br>  </br>  ⚠️ To move a `Note` back to the user\\'s `Global Space`, you need to provide the user\\'s id instead of space id, in the `spaceId` field.",
-        "parameters": [
-          {
-            "name": "spaceId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "noteId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
     "/spaces/{spaceId}/notes": {
       "get": {
         "summary": "Get all the notes in a space.",
@@ -414,49 +240,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/spaces/{spaceId}/bookmarks/{bookmarkId}": {
-      "post": {
-        "summary": "Move a bookmark to a space.",
-        "description": " When a `Bookmark` is first created, it is located in user\\'s `Global Space`. After user creates `Space`s, they can move their bookmarks to these different spaces.  </br>  </br>  ⚠️ To move a `Bookmark` back to the user\\'s `Global Space`, you need to provide the user\\'s id instead of space id, in the `spaceId` field.",
-        "parameters": [
-          {
-            "name": "spaceId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "bookmarkId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"
@@ -590,8 +373,8 @@
     },
     "/bookmarks/": {
       "get": {
-        "summary": "Gets all bookmarks of the user.",
-        "description": "Bookmarks are objects which will allow users to bookmark ceration documents, so that they can keep track of their work. Multiple bookmarks for a single document may be created, because each of these bookmarks may belong to different `Space`s.",
+        "summary": "Gets all bookmarks of the user in Global Space.",
+        "description": "Bookmarks are objects which will allow users to bookmark ceration documents, so that they can keep track of their work. Multiple bookmarks for a single document may be created, because each of these bookmarks may belong to different `Space`s.</br></br> ⚠️ This endpoint will return all the bookmarks of the user which do not belong to any `Space`s, just the ones in user",
         "parameters": [],
         "responses": {
           "200": {
@@ -609,7 +392,7 @@
       },
       "post": {
         "summary": "Creates a new bookmark.",
-        "description": "Bookmarks are objects which will allow users to bookmark ceration documents, so that they can keep track of their work. Multiple bookmarks for a single document may be created, because each of these bookmarks may belong to different `Space`s.   </br>  </br>  ⚠️ Beware that bookmarks when first created are created into the `Global Space`, which is the default space where every `Bookmark`and `Note`is located if user doesn",
+        "description": "Bookmarks are objects which will allow users to bookmark ceration documents, so that they can keep track of their work. Multiple bookmarks for a single document may be created, because each of these bookmarks may belong to different `Space`s.   </br> </br>  ⚠️ If you want to create a bookmark in the user\\'s `Global Space`, you don\\'t need to provide the `space` field. If you want to create a bookmark in a specific space, you need to provide the `space` field.  </br>  </br>  ",
         "parameters": [],
         "responses": {
           "200": {
@@ -620,6 +403,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           }
         },
         "security": [
@@ -634,6 +420,9 @@
                 "type": "object",
                 "properties": {
                   "document": {
+                    "example": "any"
+                  },
+                  "space": {
                     "example": "any"
                   }
                 }
