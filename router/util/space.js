@@ -4,7 +4,9 @@ const findOneSpace = async ({ space, user }) => {
     /* Get the space which user has created, or has been added to. */
 
     return await Space.findOne({ _id: space })
-        .or([{ user: user }, { "people": user }]);
+        .or([{ user: user }, { "people": user }])
+        .populate('people')
+        .populate('user');
 }
 
 const findSpaces = async ({ user }) => {

@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const auth = require("../middleware/auth");
 const verifyId = require("../middleware/verifyId");
+const { mockDocumentData } = require("./util/mock");
 
 const Bookmark = require("../model/bookmark");
 
@@ -15,7 +16,12 @@ router.get("/", auth, async (req, res) => {
 
     const bookmarks = await Bookmark.find({ user: req.user._id, space: null });
 
-    res.send(bookmarks);
+    let bookmarksObjects = bookmarks.map(bookmark => bookmark.toJSON());
+    bookmarksObjects.forEach(bookmark => {
+        bookmark.document = mockDocumentData;
+    });
+
+    res.send(bookmarksObjects);
 });
 
 router.post("/", auth, async (req, res) => {

@@ -7,6 +7,7 @@ const auth = require("../middleware/auth.js");
 const verifyId = require("../middleware/verifyId.js");
 
 const { findOneSpace, findSpaces } = require("./util/space.js");
+const { mockDocumentData } = require("./util/mock.js");
 
 const router = express.Router();
 
@@ -18,15 +19,50 @@ router.get("/", auth, async (req, res) => {
     res.send(spaces);
 });
 
+router.get("/:spaceId", auth, async (req, res) => {
+    // #swagger.summary = 'Get a specific space which the user created or added to.'
+    const space = await Space.findOne({ _id: req.params.spaceId }).populate('people').populate('user');
+
+    if (!space) return res.status(404).send({ message: "Space not found." });
+
+
+    const bookmarks = await Bookmark.find({ space: space._id });
+
+    let bookmarksObjects = bookmarks.map(bookmark => bookmark.toJSON());
+    bookmarksObjects.forEach(bookmark => {
+        bookmark.document = mockDocumentData;
+    });
+
+    let result = space.toJSON();
+    result.bookmarks = bookmarksObjects;
+
+    res.send(result);
+});
+
+router.get('/:spaceId/users', auth, async (req, res) => {
+    // #swagger.summary = 'Get all the users in a space.'
+
+    const space = await findOneSpace({ space: req.params.spaceId, user: req.user._id });
+
+    if (!space) return res.status(404).send({ message: "Space not found." });
+
+    res.send(space.people);
+});
+
 router.post("/", auth, async (req, res) => {
     // #swagger.summary = 'Create a new space.'
 
     if (!req.body.name)
         return res.status(400).send({ message: "Space name is required." });
 
+    const people = (req.body.people) ?
+        await User.find({ _id: { $in: req.body.people } })
+        : [];
+
     const space = await Space.create({
         user: req.user._id,
-        name: req.body.name
+        name: req.body.name,
+        people: people
     });
 
     res.send(space);
@@ -63,10 +99,17 @@ router.get("/:spaceId/notes", auth, async (req, res) => {
 });
 */
 
-router.post("/:spaceId/users/:userId", auth, verifyId, async (req, res) => {
-    // #swagger.summary = 'Add a collegue to a space.'
+router.post("/:spaceId/users", auth, verifyId, async (req, res) => {
+    // #swagger.summary = 'Add collegues to a space.'
 
-    const user = await User.findOne({ _id: req.params.userId, organization: req.user.organization });
+    const { people } = req.body;
+
+    const users = await User.find({
+        _id: {
+            $in: people
+        },
+        organization: req.user.organization
+    });
 
     // Here, we don't use the helper findOneSpace, because only the owner of the space 
     // can add an user to the space.
@@ -77,23 +120,28 @@ router.post("/:spaceId/users/:userId", auth, verifyId, async (req, res) => {
 
     if (!space) return res.status(404).send({ message: "Space not found." });
 
-    space.people = space.people.filter((item) => {
-        console.log(item);
-        return item._id != user._id;
+    space.people.pull({
+        _id: {
+            $in: users.map(user => user._id)
+        }
     });
-
-    space.people.pull({ _id: user._id });
-    space.people.push(user);
-
+    space.people.push(users);
     await space.save();
 
     res.send(space);
 });
 
-router.delete("/:spaceId/users/:userId", auth, verifyId, async (req, res) => {
+router.delete("/:spaceId/users/", auth, verifyId, async (req, res) => {
     // #swagger.summary = 'Delete a collegue from the space.'
 
-    const user = await User.findOne({ _id: req.params.userId, organization: req.user.organization });
+    const { people } = req.body;
+
+    const users = await User.find({
+        _id: {
+            $in: people
+        },
+        organization: req.user.organization
+    });
 
     // Here, we don't use the helper findOneSpace,
     // because only the owner can delete an user from the space.
@@ -104,10 +152,28 @@ router.delete("/:spaceId/users/:userId", auth, verifyId, async (req, res) => {
 
     if (!space) return res.status(404).send({ message: "Space not found." });
 
-    space.people.pull({ _id: user._id });
+    space.people.pull({
+        _id: {
+            $in: users.map(user => user._id)
+        }
+    });
+
     await space.save();
 
     res.send(space);
+});
+
+router.post("/:spaceId/bookmarks", auth, async (req, res) => {
+    // #swagger.summary = 'Create a bookmark in the space.'
+    const { document } = req.body;
+
+    const space = await findOneSpace({ space: req.params.spaceId, user: req.user._id });
+
+    if (!space) return res.status(404).send({ message: "Space not found." });
+
+    const bookmark = await Bookmark.create({ space: space._id, document });
+
+    res.send(bookmark);
 });
 
 router.get("/:spaceId/bookmarks", auth, async (req, res) => {
@@ -118,8 +184,29 @@ router.get("/:spaceId/bookmarks", auth, async (req, res) => {
     if (!space) return res.status(404).send({ message: "Space not found." });
 
     const bookmarks = await Bookmark.find({ space: space._id }).populate('user');;
+    
+    let bookmarksObjects = bookmarks.map(bookmark => bookmark.toJSON());
+    bookmarksObjects.forEach(bookmark => {
+        bookmark.document = mockDocumentData;
+    });
+    
+    res.send(bookmarksObjects);
+});
 
-    res.send(bookmarks);
+router.delete("/:spaceId/bookmarks/:bookmarkId", auth, async (req, res) => {
+    // #swagger.summary = 'Delete a bookmark from the space.'
+    const bookmarkId = req.params.bookmarkId;
+
+    const space = await findOneSpace({ space: req.params.spaceId, user: req.user._id });
+
+    if (!space) return res.status(404).send({ message: "Space not found." });
+
+    const bookmark = await Bookmark.deleteOne({
+        space: space._id,
+        _id: bookmarkId
+    });
+
+    res.send(bookmark);
 });
 
 
