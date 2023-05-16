@@ -33,5 +33,5 @@ jobs:
     - name: Start the Server 
       env:
         MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
-        HAYSTACK_URL: "http://3.78.83.166:8000"
+        HAYSTACK_URL: "http://34.159.251.169:8000"
       run: pm2 restart NodeApp --update-env
