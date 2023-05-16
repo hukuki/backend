@@ -7,7 +7,7 @@ const auth = require("../middleware/auth.js");
 const verifyId = require("../middleware/verifyId.js");
 
 const { findOneSpace, findSpaces } = require("./util/space.js");
-const { mockDocumentData } = require("./util/mock.js");
+const { getDocument } = require("./util/document");
 
 const router = express.Router();
 
@@ -29,9 +29,10 @@ router.get("/:spaceId", auth, async (req, res) => {
     const bookmarks = await Bookmark.find({ space: space._id });
 
     let bookmarksObjects = bookmarks.map(bookmark => bookmark.toJSON());
-    bookmarksObjects.forEach(bookmark => {
-        bookmark.document = mockDocumentData;
-    });
+    
+    for(let bookmark of bookmarksObjects){
+        bookmark.document = await getDocument(bookmark.document);
+    }
 
     let result = space.toJSON();
     result.bookmarks = bookmarksObjects;
@@ -186,9 +187,10 @@ router.get("/:spaceId/bookmarks", auth, async (req, res) => {
     const bookmarks = await Bookmark.find({ space: space._id }).populate('user');;
     
     let bookmarksObjects = bookmarks.map(bookmark => bookmark.toJSON());
-    bookmarksObjects.forEach(bookmark => {
-        bookmark.document = mockDocumentData;
-    });
+    
+    for(let bookmark of bookmarksObjects){
+        bookmark.document = await getDocument(bookmark.document);
+    }
     
     res.send(bookmarksObjects);
 });

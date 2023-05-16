@@ -1,0 +1,14 @@
+const {Utf8ArrayToStr} = require('./uint8');
+const s3 = require('../../s3');
+
+const getDocument = async (id) => {
+    const file = await s3.getFile('mevzuat_json/'+id+'.json');
+    
+    if(!file) return null;
+    
+    const str = Utf8ArrayToStr(file);
+    
+    return JSON.parse(str);
+}
+
+module.exports = {getDocument};
