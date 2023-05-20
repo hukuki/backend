@@ -24,13 +24,20 @@ router.get("/", auth, async (req, res) => {
 
     let bookmarksObjects = bookmarks.map(bookmark => bookmark.toJSON());
     
+    const results = [];
     for(let bookmark of bookmarksObjects){
         try{
             bookmark.document = await getDocument(bookmark.document);
+
+            if(!bookmark.document){
+                await Bookmark.deleteOne({_id: bookmark._id});
+            }else{
+                results.push(bookmark);
+            }
         }catch(e){console.log(e);}
     };
 
-    res.send(bookmarksObjects);
+    res.send(results);
 });
 
 router.post("/", auth, async (req, res) => {
@@ -58,11 +65,11 @@ router.post("/", auth, async (req, res) => {
     }
 
     try {
-        const bookmark = await Bookmark.create({
+        const bookmark = await Bookmark.findOneAndUpdate({
             document: documentId,
             user: req.user._id,
             space: spaceId || undefined
-        });
+        }, {}, { upsert: true, new: true });
 
         res.send(bookmark);
     } catch (e) {
@@ -75,7 +82,19 @@ router.delete("/:id", auth, verifyId, async (req, res) => {
     // #swagger.summary = 'Deletes a bookmark.'
     // #swagger.description = '⚠️ Beware that this endpoint is not for changing the space which this `Bookmark` is in. Use `POST /spaces/:spaceId/bookmarks/:bookmarkId` endpoint for this. '
 
-    const bookmark = await Bookmark.findOneAndDelete({ _id: req.params.id, user: req.user._id });
+    const bookmark = await Bookmark.deleteMany({ _id: req.params.id, user: req.user._id } );
+
+    if (!bookmark) return res.status(404).send({ message: 'Bookmark not found.' });
+
+    res.send(bookmark);
+});
+
+router.delete("/", auth, verifyId, async (req, res) => {
+    // #swagger.summary = 'Deletes a bookmark with document id.'
+    
+    const documentId = req.body.document;
+
+    const bookmark = await Bookmark.deleteMany({ document: documentId, user: req.user._id } );
 
     if (!bookmark) return res.status(404).send({ message: 'Bookmark not found.' });
 
