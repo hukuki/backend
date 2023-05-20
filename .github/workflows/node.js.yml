@@ -34,4 +34,5 @@ jobs:
       env:
         MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
         HAYSTACK_URL: "http://34.159.251.169:8000"
+        S3_BUCKET_NAME: "mevzuat-prod"
       run: pm2 restart NodeApp --update-env
