@@ -7,8 +7,10 @@ const getDocument = async (id) => {
     if(!file) return null;
     
     const str = Utf8ArrayToStr(file);
-    
-    return JSON.parse(str);
+    const document = JSON.parse(str);
+
+    document._id = id;
+    return document;
 }
 
 module.exports = {getDocument};

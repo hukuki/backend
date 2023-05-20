@@ -14,7 +14,13 @@ router.get("/", auth, async (req, res) => {
     // #swagger.summary = 'Gets all bookmarks of the user in Global Space.'
     // #swagger.description = 'Bookmarks are objects which will allow users to bookmark ceration documents, so that they can keep track of their work. Multiple bookmarks for a single document may be created, because each of these bookmarks may belong to different `Space`s.</br></br> ⚠️ This endpoint will return all the bookmarks of the user which do not belong to any `Space`s, just the ones in user's `Global Space`.'
 
-    const bookmarks = await Bookmark.find({ user: req.user._id, space: null });
+    const document = req.query.document;
+    const search = { user: req.user._id, space: null };
+
+    if (document)
+        search.document = document;
+        
+    const bookmarks = await Bookmark.find(search);
 
     let bookmarksObjects = bookmarks.map(bookmark => bookmark.toJSON());
     
