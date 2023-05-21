@@ -2,7 +2,8 @@ const axios = require('axios');
 const express = require("express");
 const router = express.Router();
 
-const haystack_url = process.env.HAYSTACK_URL;
+const haystack_bm25_url = process.env.HAYSTACK_BM25_URL;
+const haystack_ai_url = process.env.HAYSTACK_AI_URL;
 
 
 router.post('/', async (req, res) => {
@@ -18,6 +19,7 @@ router.post('/', async (req, res) => {
     } 
     #swagger.summary = 'Search for a document.'
     */
+    const haystack_url = req.query.model === 'ai' ? haystack_ai_url : haystack_bm25_url;
     
     try {
         console.log(req.body);
