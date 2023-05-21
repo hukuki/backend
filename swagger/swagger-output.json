@@ -110,7 +110,15 @@
       "post": {
         "summary": "Search for a document.",
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "model",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
