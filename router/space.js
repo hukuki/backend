@@ -8,6 +8,7 @@ const verifyId = require("../middleware/verifyId.js");
 
 const { findOneSpace, findSpaces } = require("./util/space.js");
 const { getDocument } = require("./util/document");
+const { isValidObjectId } = require("mongoose");
 
 const router = express.Router();
 
@@ -29,7 +30,7 @@ router.get("/:spaceId", auth, async (req, res) => {
     const bookmarks = await Bookmark.find({ space: space._id });
 
     let bookmarksObjects = bookmarks.map(bookmark => bookmark.toJSON());
-    
+
     for(let bookmark of bookmarksObjects){
         bookmark.document = await getDocument(bookmark.document);
     }
@@ -121,12 +122,7 @@ router.post("/:spaceId/users", auth, verifyId, async (req, res) => {
 
     if (!space) return res.status(404).send({ message: "Space not found." });
 
-    space.people.pull({
-        _id: {
-            $in: users.map(user => user._id)
-        }
-    });
-    space.people.push(users);
+    space.people.addToSet(...users);
     await space.save();
 
     res.send(space);
@@ -134,8 +130,10 @@ router.post("/:spaceId/users", auth, verifyId, async (req, res) => {
 
 router.delete("/:spaceId/users/", auth, verifyId, async (req, res) => {
     // #swagger.summary = 'Delete a collegue from the space.'
-
     const { people } = req.body;
+
+    if (people.some(id => !isValidObjectId(id)))
+        return res.status(400).send({ message: "Invalid user id for some user." });
 
     const users = await User.find({
         _id: {
@@ -144,21 +142,18 @@ router.delete("/:spaceId/users/", auth, verifyId, async (req, res) => {
         organization: req.user.organization
     });
 
+    if (people.length != users.length)
+        return res.status(400).send({ message: "Some users are not found." });
+
     // Here, we don't use the helper findOneSpace,
     // because only the owner can delete an user from the space.
-
     const space = await Space.findOne({ _id: req.params.spaceId, user: req.user._id })
         .populate('people')
         .populate('user');
 
     if (!space) return res.status(404).send({ message: "Space not found." });
 
-    space.people.pull({
-        _id: {
-            $in: users.map(user => user._id)
-        }
-    });
-
+    space.people.pull(users.map(user => user._id));
     await space.save();
 
     res.send(space);
@@ -185,13 +180,13 @@ router.get("/:spaceId/bookmarks", auth, async (req, res) => {
     if (!space) return res.status(404).send({ message: "Space not found." });
 
     const bookmarks = await Bookmark.find({ space: space._id }).populate('user');;
-    
+
     let bookmarksObjects = bookmarks.map(bookmark => bookmark.toJSON());
     
-    for(let bookmark of bookmarksObjects){
+    for (let bookmark of bookmarksObjects) {
         bookmark.document = await getDocument(bookmark.document);
     }
-    
+
     res.send(bookmarksObjects);
 });
 

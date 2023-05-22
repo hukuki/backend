@@ -14,7 +14,6 @@ const spaceSchema = new mongoose.Schema({
     },
     people: [{
         type: mongoose.Schema.Types.ObjectId,
-        require: true,
         ref: "User"
     }]
 });
