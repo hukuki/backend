@@ -35,5 +35,5 @@ jobs:
         MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
         HAYSTACK_BM25_URL: "http://34.159.251.169:8000"
         HAYSTACK_AI_URL: "http://147.189.198.116:8000"
-        S3_BUCKET_NAME: "mevzuat-prod"
+        S3_BUCKET_NAME: "hukuki-yedek"
       run: pm2 restart NodeApp --update-env
