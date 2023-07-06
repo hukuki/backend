@@ -28,7 +28,7 @@ jobs:
     - run: npm ci
     - name: Swagger Config
       env:
-        PUBLIC_IP: "18.198.134.13"
+        PUBLIC_IP: "35.159.27.215"
       run: npm run swagger-autogen
     - name: Start the Server 
       env:
