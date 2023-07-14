@@ -1,9 +1,9 @@
+const User = require("../model/user");
+const Document = require("../model/document")
 const express = require("express");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
-const User = require("../model/user");
 const verifyId = require("../middleware/verifyId");
-
 const router = express.Router();
 
 // Path: backend/router/user.js
@@ -12,7 +12,7 @@ router.get("/", auth, async (req, res) => {
 
 	const organization = req.user.organization;
 
-	const users = await User.find({ organization: organization });
+	const users = await User.find({ organization: organization }).populate("bookmarks", Document);
 
 	res.send(users);
 });
@@ -22,11 +22,11 @@ router.get("/:id", auth, verifyId, async (req, res) => {
 
 	const userId = req.params.id;
 	const organization = req.user.organization;
-	
+
 	const user = await User.findOne({ _id: userId, organization });
 
 	if (!user) return res.status(404).send({message:"User not found."});
- 
+
 	res.send(user);
 });
 
