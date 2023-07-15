@@ -10,18 +10,21 @@ const router = express.Router();
 
 // GET OPERATIONS:
 router.get("/", auth, async (req, res) => {
-    // #swagger.summary = 'Get all the spaces which the user created or added to.'
-    // #swagger.description = 'Spaces are models that represent a project/folder, in which `Note`s and `Bookmark`s within are related to a certain case or project. This feature is useful since user can group different stuff.
-    const user = req.user._id;
-    const spaces = await Space.find({ "people.user":  user }).populate('createdBy')
-    res.send(spaces);
-});
+	// #swagger.summary = Get spaces of the user.
+	const userId = req.user._id;
+	const user = await User.findOne({ _id: userId }).populate("spaces")
+	if (!user) return res.status(404).send({message:"User not found."});
+	res.send(user.spaces)
+})
 
 
 router.get("/:spaceId/users", auth, verifyId, async (req, res) => {
     // #swagger.summary = 'Get the people in a space'
     // #swagger.description = 'Only people in a space can see the documents saved in that space'
     const space = await Space.findOne({ _id: req.params.spaceId, "people.user": req.user._id})
+    if (!space) {
+        return res.status(404).send({ message: "Space not found"})
+    }
     res.send(space.people)
 
 })
@@ -37,35 +40,47 @@ router.get("/:spaceId/documents", auth, verifyId, async (req, res) => {
 
 
 // POST OPERATIONS
-router.post("/", auth, async (req, res) => {
-    // #swagger.summary = 'Create a new space.'
-
-    if (!req.body.name || !req.body.description)
+router.post("/", auth, verifyId, async (req, res) => {
+	// #swagger.summary = Create a new space.
+    if (!req.body.name || !req.body.description) {
         return res.status(400).send({ message: "Space name and description is required." });
-
-    const space = await Space.create({
-        createdBy: req.user._id,
+    }
+	const userId = req.user._id;
+    const newSpace = await Space.create({
+        createdBy: userId,
         name: req.body.name,
         description: req.body.description,
-        people: [{ user: req.user._id, role: "manager"}]
-    });
-
-    await User.findOneAndUpdate({ _id: req.user._id}, { $push: { spaces: space._id} })
-
-    res.send(space);
-});
+        people: [{ user: userId, role: "manager"}],
+        documents: []
+    })
+    await User.findOneAndUpdate({ _id: userId}, { $push: { spaces: newSpace._id }}, { new: true})
+	res.send(newSpace)
+})
 
 router.post("/:spaceId/users", auth, verifyId, async (req, res) => {
     // #swagger.summary = 'Add people to a space.'
-    // #swagger.description = 'Only people with the manager role can add people to a space.'
+    // #swagger.description = 'Only people with the manager role can add people to a space. Body expects an array of user ID's and assigned user roles'
     const space = await Space.findOne({ _id: req.params.spaceId, "people.user": req.user._id, "people.role": "manager"});
     if (!space) {
         return res.status(400).send({ message: "Only managers can add people to a space"})
     }
     const peopleToAdd = req.body.people;
-    const updatedSpace = await Space.findOneAndUpdate({ _id: req.params.spaceId }, { $push: { people: { $each: peopleToAdd }} })
-    await User.updateMany({ '_id': { $in: peopleToAdd } }, { $push: { spaces: req.params.spaceId }} )
-    res.send(updatedSpace)
+    const oldPeopleIds = space.people.map((p) => p.user.toString())
+    const newPeopleToAdd = peopleToAdd.filter((p) => {
+        if (oldPeopleIds.includes(p.user)) {
+            return false
+        }
+        return true
+    })
+    if (newPeopleToAdd.length === 0) {
+        res.send(space)
+    } else {
+        const updatedSpace = await Space.findOneAndUpdate({ _id: req.params.spaceId }, { $push: { people: { $each: newPeopleToAdd }} }, { new: true })
+        const newPeopleIds = newPeopleToAdd.map((p) => p.user)
+        await User.updateMany({ '_id': { $in: newPeopleIds } }, { $push: { spaces: req.params.spaceId }} )
+        res.send(updatedSpace)
+    }
+
 })
 
 router.post("/:spaceId/documents", auth, verifyId, async (req, res) => {
@@ -75,8 +90,20 @@ router.post("/:spaceId/documents", auth, verifyId, async (req, res) => {
     if (!space) {
         return res.status(400).send({ message: "Only managers and editors can add documents to a space"})
     }
-    const documentsToAdd = req.body.documents;
-    await Space.findOneAndUpdate({ _id: req.params.spaceId }, { $push: { documents: documentsToAdd }})
+    const documents = req.body.documents.map((d) => {
+        return {
+            addedBy: req.user._id,
+            document: d,
+        }
+    })
+    const oldDocuments = space.documents.map((d) => d.document.toString())
+    const newDocuments = documents.filter((d) => {
+        if (oldDocuments.includes(d.document)) {
+            return false
+        }
+        return true
+    })
+    const updatedSpace = await Space.findOneAndUpdate({ _id: req.params.spaceId }, { $push: { documents: newDocuments }}, { new: true })
     res.send(updatedSpace)
 })
 
@@ -89,15 +116,14 @@ router.put("/:spaceId/users/:userId", auth, verifyId, async(req, res) => {
         return res.status(400).send({ message: "Only managers can change roles in a space"})
     }
     const newRole = req.body.role;
-    if (newRole !== "observer" || newRole !== "manager" || newRole !== "editor") {
+    if (newRole !== "observer" && newRole !== "manager" && newRole !== "editor") {
         return res.status(400).send({ message: "Role not acceptable. "})
     }
-    const updatedSpace = await Space.findOneAndUpdate({ _id: req.params.spaceId, "people.user": req.params.userId }, { $set: { "people.$.role": newRole }})
+    const updatedSpace = await Space.findOneAndUpdate({ _id: req.params.spaceId, "people.user": req.params.userId }, { $set: { "people.$.role": newRole }}, { new: true })
     res.send(updatedSpace)
 })
 
 //DELETE OPERATIONS:
-
 router.delete("/:spaceId", auth, verifyId, async (req, res) => {
     // #swagger.summary = 'Delete a space.'
     // #swagger.description = 'Only people with the manager role can delete a space. The user created the space is assigned the manager role but further managers can change the role of the user who created the space'.
@@ -123,11 +149,11 @@ router.delete("/:spaceId/users/:userId", auth, verifyId, async (req, res) => {
 
     const deletedUserId = req.params.userId;
     const updatedSpace = await Space.findOneAndUpdate({ _id: req.params.spaceId }, { $pull: { people: deletedUserId } })
-    await User.findOneAndUpdate({ _id: deletedUserId }, { $pull: { spaces: deletedUserId }})
+    await User.findOneAndUpdate({ _id: deletedUserId }, { $pull: { spaces: deletedUserId }}, { new: true})
     res.send(updatedSpace)
 })
 
-router.delete("/:spaceId/users/:documentId", auth, verifyId, async (req, res) => {
+router.delete("/:spaceId/documents/:documentId", auth, verifyId, async (req, res) => {
     // #swagger.summary = 'Delete a document from a space.'
     // #swagger.description = 'Only people with the manager and editor roles can delete a document from a space.'.
     const space = await Space.findOne({ _id: req.params.spaceId, "people.user": req.user._id, "people.role": { $in: ["manager", "editor"]}});
@@ -136,7 +162,7 @@ router.delete("/:spaceId/users/:documentId", auth, verifyId, async (req, res) =>
     }
 
     const documentId = req.params.documentId;
-    const updatedSpace = await Space.findOneAndUpdate({ _id: req.params.spaceId }, { $pull: { documents: documentId } })
+    const updatedSpace = await Space.findOneAndUpdate({ _id: req.params.spaceId }, { $pull: { documents: { document: documentId } } }, { new: true })
     res.send(updatedSpace)
 })
 

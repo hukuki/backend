@@ -106,204 +106,6 @@
         ]
       }
     },
-    "/users/bookmarks": {
-      "get": {
-        "summary": "Get bookmarks of the user.",
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      },
-      "post": {
-        "summary": "Add bookmarks to the user.",
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "bookmarks": {
-                    "example": "any"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/users/spaces": {
-      "get": {
-        "summary": "Get spaces of the user.",
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      },
-      "post": {
-        "summary": "Add spaces to the user.",
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "spaces": {
-                    "example": "any"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/users/bookmarks/{bookmarkId}": {
-      "delete": {
-        "summary": "Delete a bookmark from the user.",
-        "description": "",
-        "parameters": [
-          {
-            "name": "bookmarkId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/users/spaces/{spaceId}": {
-      "delete": {
-        "summary": "Delete a space from the user.",
-        "description": "",
-        "parameters": [
-          {
-            "name": "spaceId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
     "/query/": {
       "post": {
         "summary": "Search for a document.",
@@ -341,8 +143,8 @@
     },
     "/spaces/": {
       "get": {
-        "summary": "Get all the spaces which the user created or added to.",
-        "description": "Spaces are models that represent a project/folder, in which `Note`s and `Bookmark`s within are related to a certain case or project. This feature is useful since user can group different stuff.",
+        "summary": "Get spaces of the user.",
+        "description": "",
         "parameters": [],
         "responses": {
           "200": {
@@ -350,6 +152,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           }
         },
         "security": [
@@ -420,6 +225,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           }
         },
         "security": [
@@ -430,7 +238,7 @@
       },
       "post": {
         "summary": "Add people to a space.",
-        "description": "Only people with the manager role can add people to a space.",
+        "description": "Only people with the manager role can add people to a space. Body expects an array of user ID",
         "parameters": [
           {
             "name": "spaceId",
@@ -676,7 +484,7 @@
         ]
       }
     },
-    "/spaces/{spaceId}/users/{documentId}": {
+    "/spaces/{spaceId}/documents/{documentId}": {
       "delete": {
         "summary": "Delete a document from a space.",
         "description": "Only people with the manager and editor roles can delete a document from a space.",
@@ -718,8 +526,8 @@
     },
     "/bookmarks/": {
       "get": {
-        "summary": "Gets all bookmarks of the user.",
-        "description": "Bookmarks are documents saved by the user. Documents added to a space are not considered as bookmarks. This end point only returns the documents bookmarked by the user",
+        "summary": "Get bookmarks of the user.",
+        "description": "",
         "parameters": [],
         "responses": {
           "200": {
@@ -727,6 +535,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           }
         },
         "security": [
@@ -736,55 +547,9 @@
         ]
       },
       "post": {
-        "summary": "Adds a new saved document.",
-        "description": "Saved documents are documents bookmarked by the user. Saving a document is different from adding a document to a space  ",
+        "summary": "Add bookmarks to the user.",
+        "description": "",
         "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "document": {
-                    "example": "any"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/bookmarks/{id}": {
-      "delete": {
-        "summary": "Deletes a bookmark.",
-        "description": "⚠️ Beware that this endpoint is not for changing the space which this `Bookmark` is in. Use `POST /spaces/:spaceId/bookmarks/:bookmarkId` endpoint for this. ",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -803,7 +568,65 @@
           {
             "bearerAuth": []
           }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "bookmarks": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookmarks/{bookmarkId}": {
+      "delete": {
+        "summary": "Delete a bookmark from the user.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "bookmarkId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
         ]
+      }
+    },
+    "/documents/": {
+      "get": {
+        "summary": "Get the content of a specific document.",
+        "description": "Only testing purposes",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
     "/documents/{id}": {

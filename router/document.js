@@ -1,9 +1,17 @@
+const Document = require("../model/document")
 const express = require('express');
 const s3 = require('../s3');
-
 const { getDocument } = require("./util/document");
 
 const router = express.Router();
+
+router.get("/", async (req, res) => {
+    // #swagger.summary = Get the content of a specific document.
+    // #swagger.description = Only testing purposes
+
+    const documents = await Document.find({})
+    res.send(documents)
+})
 
 router.get('/:id', async (req, res) => {
     // #swagger.summary = Get the content of a specific document.
