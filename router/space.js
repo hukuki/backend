@@ -32,7 +32,7 @@ router.get("/:spaceId/users", auth, verifyId, async (req, res) => {
 router.get("/:spaceId/documents", auth, verifyId, async (req, res) => {
     // #swagger.summary = 'Get the documents in a space'
     // #swagger.description = 'Only people in a space can see the documents saved in that space'
-    const space = await Space.findOne({ _id: req.params.spaceId, "people.user": req.user._id})
+    const space = await Space.findOne({ _id: req.params.spaceId, "people.user": req.user._id}).populate("documents")
     if (!space) return res.status(404).send({ message: "Space not found "})
     res.send(space.documents)
 
