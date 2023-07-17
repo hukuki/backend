@@ -3,7 +3,7 @@ require('./db.js');
 const mongoose = require("mongoose");
 
 const spaceSchema = new mongoose.Schema({
-    user: {
+    createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
@@ -12,10 +12,32 @@ const spaceSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    people: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-    }]
+    description: {
+        type: String,
+        required: true,
+    },
+    people: [ {
+            user: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User"
+            },
+            role: {
+                type: String,
+                enum: ["editor", "observer", "manager"],
+                default: "observer",
+                required: true
+            }
+        }],
+    documents: [{
+            document: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Document"
+            },
+            addedBy: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User"
+            }
+        }],
 });
 
 const Space = mongoose.model("Space", spaceSchema);

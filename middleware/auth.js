@@ -11,7 +11,7 @@ admin.initializeApp({
 
 module.exports = async (req, res, next) => {
     /* #swagger.autoHeaders=false */
-    
+
     /*  #swagger.security = [{
             "bearerAuth": []
     }] */
@@ -39,7 +39,7 @@ module.exports = async (req, res, next) => {
     });
 
     if (req.user) return next();
-    
+
     // If not registered (meaning the user is signed up from the third party auth provider
     // but not yet encoutered in the backend) : create a new user in our database.
 
@@ -54,8 +54,8 @@ module.exports = async (req, res, next) => {
         organization = await Organization.create({
             domain: domain,
         });
-    
+
     req.user = await User.create({ email: userInfo.email, organization: organization._id, auth_provider_id: userInfo.uid });
-    
+
     next();
 }
