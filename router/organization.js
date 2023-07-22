@@ -6,7 +6,7 @@ const verifyId = require("../middleware/verifyId");
 
 const router = express.Router();
 
-router.post("/", auth, sudo, async (req, res) => {
+router.post("/", auth, sudo, async (req, res, next) => {
     const { name, address, domain } = req.body;
 
     try {
@@ -15,8 +15,7 @@ router.post("/", auth, sudo, async (req, res) => {
         await organization.save();
         res.send(organization);
     } catch (error) {
-        console.error(error);
-        res.status(500).send("Something went wrong.");
+        next(error)
     }
 });
 

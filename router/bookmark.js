@@ -10,6 +10,8 @@ const User = require("../model/user");
 
 const router = express.Router();
 
+const addBookmarkValidator = require("./util/addBookmarkValidator")
+
 router.get("/", auth, async (req, res) => {
 	// #swagger.summary = Get bookmarks of the user.
 
@@ -19,25 +21,28 @@ router.get("/", auth, async (req, res) => {
 	res.send(user.bookmarks)
 })
 
-router.post("/", auth, verifyId, async (req, res) => {
+router.post("/", auth, verifyId, addBookmarkValidator, async (req, res, next) => {
 	// #swagger.summary = Add bookmarks to the user.
-	const userId = req.user._id;
-	const user = await User.findOne({ _id: userId })
-	if (!user) return res.status(404).send({message:"User not found."});
-	const bookmarks = req.body.bookmarks;
-    const newBookmarks = bookmarks.filter((b) => {
-        if (user.bookmarks.includes(b)) {
-            return false;
-        }
-        return true;
-    })
-    if (newBookmarks.length === 0) {
-        res.send(user)
-    } else {
-        const updatedUser = await User.findOneAndUpdate({ _id: req.user._id }, { $push: { bookmarks: newBookmarks }}, { new: true})
-	    res.send(updatedUser)
-    }
-
+	try {
+		const userId = req.user._id;
+		const user = await User.findOne({ _id: userId })
+		if (!user) return res.status(404).send({message:"User not found."});
+		const bookmarks = req.body.bookmarks;
+		const newBookmarks = bookmarks.filter((b) => {
+			if (user.bookmarks.includes(b)) {
+				return false;
+			}
+			return true;
+		})
+		if (newBookmarks.length === 0) {
+			res.send(user)
+		} else {
+			const updatedUser = await User.findOneAndUpdate({ _id: req.user._id }, { $push: { bookmarks: newBookmarks }}, { new: true})
+			res.send(updatedUser)
+		}
+	} catch (err) {
+		next(err)
+	}
 })
 
 router.delete("/:bookmarkId", auth, verifyId, async (req, res) => {
