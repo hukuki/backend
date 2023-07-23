@@ -30,8 +30,7 @@ const spaceSchema = new mongoose.Schema({
         }],
     documents: [{
             document: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Document"
+                type: mongoose.Schema.Types.String,
             },
             addedBy: {
                 type: mongoose.Schema.Types.ObjectId,
