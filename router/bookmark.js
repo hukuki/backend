@@ -16,7 +16,7 @@ router.get("/", auth, async (req, res) => {
 	// #swagger.summary = Get bookmarks of the user.
 
 	const userId = req.user._id;
-	const user = await User.findOne({ _id: userId }).populate("bookmarks", Document)
+	const user = await User.findOne({ _id: userId }).populate("bookmarks")
 	if (!user) return res.status(404).send({message:"User not found."});
 	res.send(user.bookmarks)
 })

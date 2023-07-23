@@ -26,7 +26,7 @@ router.get("/:id", auth, verifyId, async (req, res) => {
 	const userId = req.params.id;
 	const organization = req.user.organization;
 
-	const user = await User.findOne({ _id: userId, organization }).populate("bookmarks", Document).populate("spaces", Space);
+	const user = await User.findOne({ _id: userId, organization }).populate("bookmarks").populate("spaces");
 
 	if (!user) return res.status(404).send({message:"User not found."});
 
