@@ -1,6 +1,8 @@
 const axios = require('axios');
 const express = require("express");
 const router = express.Router();
+const logRequest = require("./util/logRequest");
+const auth = require("../middleware/auth");
 
 const haystack_bm25_url = process.env.HAYSTACK_BM25_URL;
 const haystack_ai_url = process.env.HAYSTACK_AI_URL;
@@ -25,6 +27,9 @@ router.post('/', async (req, res) => {
         console.log(req.body);
         const response = await axios.post(`${haystack_url}/query`, req.body);
         res.send(response.data);
+        
+        results = response.data.documents?.map(doc => doc.id);
+        logRequest(req, res, results);
     } catch (error) {
         console.error(error);
         res.status(500).send('Something went wrong.');
