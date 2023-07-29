@@ -36,6 +36,25 @@ const doc = {
             },
             additionalProperties: false,
         },
+        QueryFeedbackRequest: {
+            title: "QueryFeedbackRequest",
+            required: ["query", "resultId", "thumbsUp"],
+            type: "object",
+            properties: {
+            query: {
+                title: "Query",
+                type: "string",
+            },
+            resultId: {
+                title: "Result Id",
+                type: "string",
+            },
+            thumbsUp: {
+                title: "Thumbs Up",
+                type: "boolean",
+            },
+            },
+        },
         PostNoteRequest: {
             title: "PostNoteRequest",
             required: ["from", "to", "content"],

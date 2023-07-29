@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const logRequest = require("./util/logRequest");
 const auth = require("../middleware/auth");
+const queryFeedbackValidator = require("./util/queryFeedbackValidator");
 
 const haystack_bm25_url = process.env.HAYSTACK_BM25_URL;
 const haystack_ai_url = process.env.HAYSTACK_AI_URL;
@@ -30,6 +31,28 @@ router.post('/', async (req, res) => {
         
         results = response.data.documents?.map(doc => doc.id);
         logRequest(req, res, results);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Something went wrong.');
+    }
+});
+
+router.post('/feedback', auth, queryFeedbackValidator, async (req, res) => {
+    /*  #swagger.requestBody = {
+            in: 'body',
+            required: true,
+            description: 'This endpoint allows users to provide feedback on the results of a query.',
+            content: {
+                'application/json': {
+                    schema: { $ref: '#/components/schemas/QueryFeedbackRequest' }
+                }
+            }
+    }
+    #swagger.summary = 'Provide feedback on the results of a query.'
+    */
+    try {
+        logRequest(req, res, "");
+        res.send('Feedback received.');
     } catch (error) {
         console.error(error);
         res.status(500).send('Something went wrong.');
