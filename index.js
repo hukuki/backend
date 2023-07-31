@@ -15,6 +15,7 @@ const noteRouter = require("./router/note");
 const spaceRouter = require("./router/space");
 const bookmarkRouter = require("./router/bookmark");
 const documentRouter = require("./router/document");
+const feedbackRouter = require("./router/feedback");
 
 app.use(
     "/api-docs",
@@ -31,6 +32,7 @@ app.use("/query", queryRouter);
 app.use("/spaces", spaceRouter);
 app.use("/bookmarks", bookmarkRouter);
 app.use("/documents", documentRouter);
+app.use("/feedback", feedbackRouter);
 
 app.listen(port, () => {
   console.log(`${chalk.green.bold.inverse(" SUCCESS ")} Server is running on port: ${chalk.bold(port)}.`);
