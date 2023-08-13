@@ -141,6 +141,41 @@
         }
       }
     },
+    "/query/feedback": {
+      "post": {
+        "summary": "Provide feedback on the results of a query.",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "in": "body",
+          "required": true,
+          "description": "This endpoint allows users to provide feedback on the results of a query.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QueryFeedbackRequest"
+              }
+            }
+          }
+        }
+      }
+    },
     "/spaces/": {
       "get": {
         "summary": "Get spaces of the user.",
@@ -751,6 +786,29 @@
           }
         },
         "additionalProperties": false
+      },
+      "QueryFeedbackRequest": {
+        "title": "QueryFeedbackRequest",
+        "required": [
+          "query",
+          "resultId",
+          "thumbsUp"
+        ],
+        "type": "object",
+        "properties": {
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "resultId": {
+            "title": "Result Id",
+            "type": "string"
+          },
+          "thumbsUp": {
+            "title": "Thumbs Up",
+            "type": "boolean"
+          }
+        }
       },
       "PostNoteRequest": {
         "title": "PostNoteRequest",
