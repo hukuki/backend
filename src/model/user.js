@@ -31,6 +31,7 @@ const userSchema = new mongoose.Schema({
     auth_provider_id: {
         type: String,
         required: true,
+        unique: true,
     },
     bookmarks: [{
         type: mongoose.Schema.Types.String,
