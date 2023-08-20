@@ -25,7 +25,6 @@ router.post('/', async (req, res) => {
     const haystack_url = req.query.model === 'ai' ? haystack_ai_url : haystack_bm25_url;
     
     try {
-        console.log(req.body);
         const response = await axios.post(`${haystack_url}/query`, req.body);
         res.send(response.data);
         
