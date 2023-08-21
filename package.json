@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "jest",
+    "test": "jest --runInBand",
     "dev": "nodemon",
     "swagger-autogen": "node ./swagger/swagger.js"
   },

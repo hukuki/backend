@@ -41,7 +41,7 @@ router.get("/:spaceId/documents", auth, verifyId, async (req, res) => {
 
 
 // POST OPERATIONS
-router.post("/", auth, verifyId, createSpaceValidator, async (req, res, next) => {
+router.post("/", auth, createSpaceValidator, async (req, res, next) => {
 	// #swagger.summary = Create a new space.
 	const userId = req.user._id;
     try {
@@ -150,6 +150,7 @@ router.delete("/:spaceId", auth, verifyId, async (req, res, next) => {
         const deletedSpace = await Space.deleteOne({ _id: req.params.spaceId })
         const users = space.people.map((p) => p.user)
         await User.updateMany({ '_id': { $in: users } }, { $pull: { spaces: req.params.spaceId }} )
+        
         res.send(deletedSpace)
     } catch (err) {
         next(err)

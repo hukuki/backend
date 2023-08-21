@@ -15,6 +15,15 @@ module.exports = async (req, res, next) => {
     /*  #swagger.security = [{
             "bearerAuth": []
     }] */
+    
+    if(process.env.TEST_MODE === 'true'){
+        req.user = await User.findOne({
+            auth_provider_id : process.env.TEST_AUTH_PROVIDER_ID
+        });
+
+        return next();
+    }
+
     const bearer = req.headers.authorization;
 
     if (!bearer || !bearer.startsWith('Bearer '))
