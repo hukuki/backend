@@ -2,7 +2,7 @@ const {Utf8ArrayToStr} = require('./uint8');
 const s3 = require('../../s3');
 
 const getDocument = async (id) => {
-    const file = await s3.getFile('mevzuat_json/'+id+'.json');
+    const file = await s3.getFile('tree/'+id+'.json');
     
     if(!file) return null;
     
